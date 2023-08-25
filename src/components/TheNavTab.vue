@@ -1,5 +1,9 @@
 <template>
   <v-card>
+    <div>
+      <TheMenu />
+    </div>
+    <div>
     <v-tabs v-model="tab" bg-color="#58a46c" class="ok">
       <v-tab value="one">My Matters</v-tab>
       <v-tab value="two">My Day</v-tab>
@@ -17,8 +21,8 @@
           </v-btn>
         </v-row>
       </v-container>
-
     </v-tabs>
+  </div>
 
     <div>
       <TheSearch :activeTab="tab" />
@@ -46,6 +50,7 @@ import emailLogo from "../assets/email.png";
 import callLogo from "../assets/call.png";
 import TheDate from './MyDay/TheDate.vue';
 import TheTimer from './timer/TheTimer.vue';
+import TheMenu from '../components/theMenuBar/TheMenu.vue'
 
 export default {
   data: () => ({
@@ -59,6 +64,7 @@ export default {
     TheCards,
     TheDate,
     TheTimer,
+    TheMenu,
   },
 };
 </script>
@@ -76,8 +82,8 @@ export default {
 }
 
 .logo {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   z-index: 999;
   margin-left: 0.2rem;
   margin-top: -0.2rem;
@@ -87,6 +93,18 @@ export default {
   background-color: #58a46c;
   margin-top: 0.1rem;
 }
+
+.v-tab {
+  font-size: 11px;
+  font-weight: 400;
+  padding: 0;
+}
+
+.v-btn {
+  padding: 0;
+  margin-left: 0.2rem;
+}
+
 
 </style>
 

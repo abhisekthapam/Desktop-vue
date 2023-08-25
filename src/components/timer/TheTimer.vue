@@ -109,7 +109,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 0.1rem;
-    border: 1px solid black;
+    border: 1px solid rgba(0, 0, 0, 0.203);
     margin: 0.1rem;
     padding:0.4rem;
     border-radius: 5px;

@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, Menu } from 'electron';
+import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 
@@ -12,9 +12,9 @@ let mainWindow;
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 480,
-    minWidth: 480,
-    height: 700,
+    width: 380,
+    minWidth: 380,
+    height: 630,
     resizable: true,
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -50,6 +50,14 @@ app.on('ready', async () => {
     }
   }
   
+  ipcMain.on('minimize-window', () => {
+    mainWindow.minimize();
+  });
+
+  ipcMain.on('close-window', () => {
+    mainWindow.close(); // Close the window gracefully
+  });
+
   const emptyMenu = Menu.buildFromTemplate([]);
   Menu.setApplicationMenu(emptyMenu);
 
