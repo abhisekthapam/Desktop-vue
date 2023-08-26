@@ -10,6 +10,7 @@
       single-line
       hide-details
       @click:prepend-inner="onClick"
+      class="text"
     >
       <v-container class="plus-icon">
         <v-row justify="end">
@@ -61,6 +62,10 @@ export default {
 
 .mdi-plus:hover {
   color: #58a46c;
+}
+
+.text {
+  font-size: 10px;
 }
 </style>
   

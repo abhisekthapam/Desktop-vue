@@ -1,6 +1,7 @@
-import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron';
+import { app, protocol, BrowserWindow, Menu, ipcMain, nativeImage } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+import path from 'path';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -9,6 +10,17 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 let mainWindow;
+
+const iconPath = path.join(__dirname, '..', 'src', 'assets', 'PersonIcon.png');
+const iconPathMinimized = path.join(__dirname, '..', 'src', 'assets', 'BottomLogo.png');
+
+let isMinimized = false;
+
+const appIcon = nativeImage.createFromPath(iconPath);
+const appIconMinimized = nativeImage.createFromPath(iconPathMinimized);
+
+appIcon.setTemplateImage(true);
+appIconMinimized.setTemplateImage(true);
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
@@ -22,9 +34,22 @@ async function createWindow() {
     }
   });
 
+
+  const emptyMenu = Menu.buildFromTemplate([]);
+  Menu.setApplicationMenu(emptyMenu);
+
+  mainWindow.on('minimize', () => {
+    isMinimized = true;
+    mainWindow.setIcon(appIconMinimized);
+  });
+
+  mainWindow.on('restore', () => {
+    isMinimized = false;
+    mainWindow.setIcon(appIconMinimized);
+  });
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    // if (!process.env.IS_TEST) mainWindow.webContents.openDevTools();
   } else {
     createProtocol('app');
     mainWindow.loadURL('app://./index.html');
@@ -49,17 +74,6 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  
-  ipcMain.on('minimize-window', () => {
-    mainWindow.minimize();
-  });
-
-  ipcMain.on('close-window', () => {
-    mainWindow.close(); // Close the window gracefully
-  });
-
-  const emptyMenu = Menu.buildFromTemplate([]);
-  Menu.setApplicationMenu(emptyMenu);
 
   createWindow();
 });
