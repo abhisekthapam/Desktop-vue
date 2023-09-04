@@ -1,146 +1,260 @@
 <template>
-    <div>
-      <div class="stopwatch">
-        <button @click="startStop" class="stopwatch-btn" title="Create a new timer">
-          <img :src="Logo1" alt="Stopwatch Logo" class="stopwatchLogo" />Start Timer
-        </button>
+  <div>
+    <div class="timer-start-main">
+      <div
+        class="timer-start"
+        title="Create a new timer"
+        @click="startNewTimer"
+      >
+        <img :src="Logo1" alt="Timer Logo" class="logo" />
+        <button>Start Timer</button>
       </div>
-      <div class="timer-output" v-if="showTimer">
-        <div class="timer-output-inner">
-          {{ isRunning ? formatTime : (stoppedTime !== null ? ` ${formatStoppedTime}` : '') }}
-        </div> 
-        <div class="description">
-          <h1><em>No description</em></h1>
-          <p><em>No matter selected</em></p>
+    </div>
+    <div v-for="(timer, index) in timers" :key="index">
+      <div class="timer-container" v-if="timer.isOpen">
+        <div
+          class="timer-div"
+          :style="{
+            backgroundColor: timer.isRunning
+              ? 'rgba(255, 192, 203, 0.447)'
+              : '',
+          }"
+        >
+          <p :style="{ color: timer.isRunning ? 'black' : '' }">
+            {{ timer.formattedTime }}
+
+            <button class="toggle-btn" @click="toggleTimer(timer)">
+              <img
+                v-if="timer.isRunning"
+                :src="Logo3"
+                alt="Play Logo"
+                class="logo"
+                title="Pause recording"
+              />
+              <img
+                v-else
+                :src="Logo2"
+                alt="Pause Logo"
+                class="logo"
+                title="Start the timer"
+              />
+            </button>
+            <button class="save-close-btn" @click="closeTimer(timer)">
+              <img
+                v-if="timer.isRunning"
+                :src="Logo7"
+                alt="Close Logo"
+                class="logo"
+                title="Cancel this timer"
+              />
+              <img
+                v-else
+                :src="Logo5"
+                alt="Close Logo"
+                class="logo"
+                title="Cancel this timer"
+              />
+            </button>
+            <button class="save-close-btn">
+              <img
+                v-if="timer.isRunning"
+                :src="Logo6"
+                alt="Save Logo"
+                class="logo"
+                title="Stop the timer and save to time sheet"
+              />
+              <img
+                v-else
+                :src="Logo4"
+                alt="Save Logo"
+                class="logo"
+                title="Save to the time sheet"
+              />
+            </button>
+          </p>
+        </div>
+        <div class="timer-text-div">
+          <p class="timer-description"><em>No description</em></p>
+          <p class="timer-no-matter"><em>No matter selected</em></p>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-import blackStopwatch from "../../assets/blackStopwatch.png";
+  </div>
+</template>
+
+<script>
+import Timer from "../../assets/blackStopwatch.png";
+import Play from "../../assets/play.png";
+import Pause from "../../assets/pause.png";
+import Save from "../../assets/save.png";
+import Close from "../../assets/exit.png";
+import SaveBlack from "../../assets/saveBlack.png";
+import CloseBlack from "../../assets/exitBlack.png";
+
 export default {
   data() {
     return {
-      isRunning: false,
-      startTime: 0,
-      elapsedTime: 0,
-      stoppedTime: null,
-      timer: null,
-      showTimer:false,
-      Logo1: blackStopwatch,
+      timers: [],
+      timerId: 1,
+      Logo1: Timer,
+      Logo2: Play,
+      Logo3: Pause,
+      Logo4: Save,
+      Logo5: Close,
+      Logo6: SaveBlack,
+      Logo7: CloseBlack,
     };
   },
-  computed: {
-    formatTime() {
-      const totalMilliseconds = this.elapsedTime;
-      const seconds = Math.floor((totalMilliseconds / 1000) % 60);
-      const minutes = Math.floor((totalMilliseconds / 1000 / 60) % 60);
-      const hours = Math.floor(totalMilliseconds / 1000 / 3600);
-
-      return `${hours.toString().padStart(2, "0")}:
-                ${minutes.toString().padStart(2, "0")}:
-                ${seconds.toString().padStart(2, "0")}`;
-    },
-    formatStoppedTime() {
-      if (this.stoppedTime !== null) {
-        const totalMilliseconds = this.stoppedTime;
-        const seconds = Math.floor((totalMilliseconds / 1000) % 60);
-        const minutes = Math.floor((totalMilliseconds / 1000 / 60) % 60);
-        const hours = Math.floor(totalMilliseconds / 1000 / 3600);
-
-        return `${hours.toString().padStart(2, "0")}:
-                  ${minutes.toString().padStart(2, "0")}:
-                  ${seconds.toString().padStart(2, "0")}`;
-      } else {
-        return "";
-      }
-    },
-  },
   methods: {
-    startStop() {
-      if (this.isRunning) {
-        clearInterval(this.timer);
-        this.isRunning = false;
-        this.stoppedTime = this.elapsedTime;
-      } else {
-        this.startTime = Date.now();
-        this.elapsedTime = 0;
-        this.timer = setInterval(() => {
-          this.elapsedTime = Date.now() - this.startTime;
-        }, 10);
-        this.isRunning = true;
-        this.stoppedTime = null;
-      }
-      this.showTimer = true;
+    startNewTimer() {
+      this.timers.forEach((timer) => {
+        this.pauseTimer(timer);
+      });
+
+      const newTimer = {
+        id: this.timerId++,
+        startTime: Date.now(),
+        isRunning: true,
+        lastPausedTime: 0,
+        interval: setInterval(() => {
+          if (newTimer.isRunning) {
+            const elapsed =
+              Date.now() - newTimer.startTime + newTimer.lastPausedTime;
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            newTimer.formattedTime = `${hours}:${
+              minutes < 10 ? "0" : ""
+            }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+            this.$forceUpdate();
+          }
+        }),
+        isOpen: true,
+      };
+
+      this.timers.unshift(newTimer);
     },
-    resetStoppedTime() {
-      this.stoppedTime = null;
-      this.elapsedTime = 0;
+    toggleTimer(timer) {
+      if (timer.isRunning) {
+        this.pauseTimer(timer);
+      } else {
+        this.resumeTimer(timer);
+      }
+    },
+    pauseTimer(timer) {
+      if (timer.isRunning) {
+        clearInterval(timer.interval);
+        timer.isRunning = false;
+        timer.lastPausedTime += Date.now() - timer.startTime;
+      }
+    },
+    resumeTimer(timer) {
+      if (!timer.isRunning) {
+        timer.startTime = Date.now();
+        timer.isRunning = true;
+        timer.interval = setInterval(() => {
+          if (timer.isRunning) {
+            const elapsed = Date.now() - timer.startTime + timer.lastPausedTime;
+            const hours = Math.floor(elapsed / 3600000);
+            const minutes = Math.floor((elapsed % 3600000) / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            timer.formattedTime = `${hours}:${
+              minutes < 10 ? "0" : ""
+            }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+            this.$forceUpdate();
+          }
+        }, 1000);
+      }
+    },
+    closeTimer(timer) {
+      timer.isOpen = false;
     },
   },
-  beforeUnmounted() {
-    clearInterval(this.timer);
+  beforeUnmount() {
+    this.timers.forEach((timer) => {
+      clearInterval(timer.interval);
+    });
+    this.timers = [];
   },
 };
 </script>
-  
 
-<style>
-.stopwatch {
-  border: 1px solid white;
-  margin-bottom: 1rem;
+
+<style scoped>
+.timer-container {
+  border: 1px solid rgba(0, 0, 0, 0.112);
+  margin-bottom: 10px;
+  border-radius: 3px;
 }
 
-.timer-output {
-  border: 1px solid rgba(0, 0, 0, 0.532)   ;
-  height: 6rem;
-  margin-top: 3rem;
-
+.timer-div {
+  height: 2rem;
+  padding-left: 7px;
+  padding-top: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(84, 83, 83, 0.879);
+  color: white;
 }
 
-.timer-output-inner {
-    height: 2rem;
-    padding: 0.3rem;
-    color: white;
-    background: rgba(86, 85, 85, 0.912);
-}
-.stopwatch-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.1rem;
-    border: 1px solid rgba(0, 0, 0, 0.203);
-    margin: 0.1rem;
-    padding:0.4rem;
-    border-radius: 5px;
-    float: right;
+.timer-text-div {
+  padding-left: 7px;
 }
 
-.stopwatch-btn:hover {
-    cursor: pointer;
-    background: rgba(128, 128, 128, 0.179);
+.toggle-btn {
+  margin-left: 0.7rem;
+  margin-top: 0.2rem;
 }
 
-.stopwatchLogo {
-    width: 21px;
-    margin-top: -0.2rem;
+.timer-description {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.793);
 }
 
-.description {
-    height: 3rem;
-   margin-top: 0.6rem;
-   margin-left: 0.3rem;
+.timer-description:hover {
+  color: black;
 }
 
-h1 {
-    font-weight: 400;
-    font-size: 20px;
+.timer-no-matter {
+  margin-bottom: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.793);
 }
-p{
-    font-weight: 400;
-    font-size: 12px;
-    margin-top: 0.3rem;
+
+.timer-no-matter:hover {
+  color: black;
+}
+
+.timer-start {
+  border: 1px solid rgba(0, 0, 0, 0.249);
+  width: 7rem;
+  height: 2.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+  border-radius: 5px;
+  font-size: 15px;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+}
+
+.timer-start:hover {
+  background-color: rgba(0, 0, 0, 0.105);
+}
+
+.timer-start-main {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save-close-btn {
+  float: right;
+  margin-right: 1rem;
+  margin-top: 3px;
 }
 </style>
-
-  

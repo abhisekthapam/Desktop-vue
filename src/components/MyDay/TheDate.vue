@@ -198,7 +198,7 @@ td {
 }
 
 .selected-date {
-  width: 130px;
+  width: 135px;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid #ccc;
