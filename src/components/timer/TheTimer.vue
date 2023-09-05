@@ -55,7 +55,7 @@
                 title="Cancel this timer"
               />
             </button>
-            <button class="save-close-btn">
+            <button class="save-close-btn" @click="openModal">
               <img
                 v-if="timer.isRunning"
                 :src="Logo6"
@@ -74,8 +74,24 @@
           </p>
         </div>
         <div class="timer-text-div">
-          <p class="timer-description"><em>No description</em></p>
+          <p class="timer-description" @click="openModal(timer)">
+            <em>{{ timer.timerDescription || 'No Description' }}</em>
+          </p>
           <p class="timer-no-matter"><em>No matter selected</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <div>
+        <p class="timer-modal-text-head">Edit Description</p>
+        <p class="timer-modal-text">Create a description for the time entry</p>
+      </div>
+        <input v-model="modalText" class="timer-description-text-field" placeholder="Description"/>
+        <div class="timer-button-div">
+          <button @click="cancelModalChanges" class="timer-modal-cancel-btn">Cancel</button>
+        <button @click="saveModalChanges" class="timer-modal-save-btn">Save</button>
         </div>
       </div>
     </div>
@@ -103,6 +119,8 @@ export default {
       Logo5: Close,
       Logo6: SaveBlack,
       Logo7: CloseBlack,
+      showModal: false,
+      modalText: "",
     };
   },
   methods: {
@@ -168,6 +186,28 @@ export default {
     },
     closeTimer(timer) {
       timer.isOpen = false;
+    },
+    openModal(timer) {
+      this.showModal = true;
+      this.modalText = timer.timerDescription;
+      this.currentTimer = timer;
+    },
+
+    closeModal() {
+      if (this.currentTimer) {
+        this.currentTimer.timerDescription = this.modalText;
+      }
+      this.showModal = false;
+    },
+    saveModalChanges() {
+      if (this.currentTimer) {
+        this.currentTimer.timerDescription = this.modalText;
+      }
+      this.showModal = false;
+    },
+
+    cancelModalChanges() {
+      this.showModal = false;
     },
   },
   beforeUnmount() {
@@ -256,5 +296,63 @@ export default {
   float: right;
   margin-right: 1rem;
   margin-top: 3px;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #000000;
+  width: 90%;
+}
+
+.timer-description-text-field {
+  border: 1px solid rgba(0, 0, 0, 0.219);
+  width: 100%;
+  height: 50px;
+  display: flex;
+  margin-bottom: 1rem;
+  padding-left: 0.7rem;
+}
+.timer-button-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.timer-modal-text-head {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.timer-modal-text {
+  font-size: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.timer-modal-cancel-btn {
+  font-size: 12px;
+}
+
+.timer-modal-save-btn {
+  border: none;
+  width: 50px;
+  height: 40px;
+  background-color: #58a46c;
+  color: white;
 }
 </style>
