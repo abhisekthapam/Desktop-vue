@@ -24,14 +24,24 @@
       <div v-if="showCalendar">
         <div class="year-month">
           <label for="year">Year:&nbsp;</label>
-          <select class="custom-select" id="year" v-model="selectedYear" @change="updateCalendar">
+          <select
+            class="custom-select"
+            id="year"
+            v-model="selectedYear"
+            @change="updateCalendar"
+          >
             <option v-for="year in availableYears" :key="year">
               {{ year }}
             </option>
           </select>
 
           <span class="month"><label for="month">Month:&nbsp;</label></span>
-          <select id="month" class="custom-select two" v-model="selectedMonth" @change="updateCalendar">
+          <select
+            id="month"
+            class="custom-select two"
+            v-model="selectedMonth"
+            @change="updateCalendar"
+          >
             <option
               v-for="(month, index) in months"
               :key="month"
@@ -71,7 +81,10 @@
     </div>
 
     <div class="footer-div">
-      <p>You don't have any time entries recorded for <span class="selected-text">{{selectedDateText}}</span></p>
+      <p>
+        You don't have any time entries recorded for
+        <span class="selected-text">{{ selectedDateText }}</span>
+      </p>
       <p>To add some, pick a matter and then add time</p>
     </div>
   </div>

@@ -12,10 +12,8 @@
       </v-tab>
 
       <v-container>
-        <v-row justify="end">
-          <v-btn min-width="30" class="custom-color" variant="text">
-            <img :src="Logo2" alt="Email Logo" class="logo" />
-          </v-btn>
+        <v-row justify="end">          
+          <v-btn min-width="30" class="custom-color" variant="text"> <TheEmail  @trigger-button-in-timer="StartTimerInTheTimer"/></v-btn>
           <v-btn min-width="30" class="custom-color"  variant="text">
             <img :src="Logo3" alt="Call Logo" class="logo" />
           </v-btn>
@@ -36,7 +34,7 @@
 
         <v-window-item value="two"><TheDate /></v-window-item>
 
-        <v-window-item value="three"> <TheTimer/> </v-window-item>
+        <v-window-item value="three"> <TheTimer  ref="theTimer"/> </v-window-item>
       </v-window>
     </v-card-text>
   </v-card>
@@ -46,17 +44,16 @@
 import TheSearch from "./TheSearch.vue";
 import TheCards from "./mattersCards/TheCards.vue";
 import timerLogo from "../assets/timer.png";
-import emailLogo from "../assets/email.png";
 import callLogo from "../assets/call.png";
 import TheDate from './MyDay/TheDate.vue';
 import TheTimer from './timer/TheTimer.vue';
-import TheMenu from '../components/theMenuBar/TheMenu.vue'
+import TheMenu from '../components/theMenuBar/TheMenu.vue';
+import TheEmail from '../components/email/TheEmail.vue';
 
 export default {
   data: () => ({
     tab: null,
     Logo1: timerLogo,
-    Logo2: emailLogo,
     Logo3: callLogo,
   }),
   components: {
@@ -65,6 +62,12 @@ export default {
     TheDate,
     TheTimer,
     TheMenu,
+    TheEmail,
+  },
+  methods: {
+    StartTimerInTheTimer() {
+      this.$refs.theTimer.startNewTimer();
+    },
   },
 };
 </script>

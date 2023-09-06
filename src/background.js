@@ -24,8 +24,8 @@ appIconMinimized.setTemplateImage(true);
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 380,
-    minWidth: 380,
+    width: 385,
+    minWidth: 385,
     height: 630,
     resizable: true,
     webPreferences: {

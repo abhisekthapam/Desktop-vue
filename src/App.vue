@@ -1,16 +1,16 @@
 <template>
   <v-app>
     <v-main>
-      <TheNavTab/>
+      <TheNavTab />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import TheNavTab from './components/TheNavTab.vue'
+import TheNavTab from "./components/TheNavTab.vue";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
     TheNavTab,
@@ -19,5 +19,5 @@ export default {
   data: () => ({
     //
   }),
-}
+};
 </script>

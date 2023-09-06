@@ -75,7 +75,7 @@
         </div>
         <div class="timer-text-div">
           <p class="timer-description" @click="openModal(timer)">
-            <em>{{ timer.timerDescription || 'No Description' }}</em>
+            <em>{{ timer.timerDescription || "No Description" }}</em>
           </p>
           <p class="timer-no-matter"><em>No matter selected</em></p>
         </div>
@@ -85,13 +85,23 @@
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <div>
-        <p class="timer-modal-text-head">Edit Description</p>
-        <p class="timer-modal-text">Create a description for the time entry</p>
-      </div>
-        <input v-model="modalText" class="timer-description-text-field" placeholder="Description"/>
+          <p class="timer-modal-text-head">Edit Description</p>
+          <p class="timer-modal-text">
+            Create a description for the time entry
+          </p>
+        </div>
+        <input
+          v-model="modalText"
+          class="timer-description-text-field"
+          placeholder="Description"
+        />
         <div class="timer-button-div">
-          <button @click="cancelModalChanges" class="timer-modal-cancel-btn">Cancel</button>
-        <button @click="saveModalChanges" class="timer-modal-save-btn">Save</button>
+          <button @click="cancelModalChanges" class="timer-modal-cancel-btn">
+            Cancel
+          </button>
+          <button @click="saveModalChanges" class="timer-modal-save-btn" :disabled="saveDisabled" :style="{ cursor: saveDisabled ? 'not-allowed' : 'pointer' }" :title="saveDisabled ? 'Field empty' : ''">
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -122,6 +132,11 @@ export default {
       showModal: false,
       modalText: "",
     };
+  },
+  computed: {
+    saveDisabled() {
+      return !this.modalText || this.modalText === "Description";
+    },
   },
   methods: {
     startNewTimer() {
@@ -305,7 +320,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
   display: flex;
   justify-content: center;
