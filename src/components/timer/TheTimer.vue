@@ -55,7 +55,7 @@
                 title="Cancel this timer"
               />
             </button>
-            <button class="save-close-btn" @click="openModal">
+            <button class="save-close-btn">
               <img
                 v-if="timer.isRunning"
                 :src="Logo6"
@@ -305,6 +305,7 @@ export default {
 .timer-start-main {
   display: flex;
   justify-content: flex-end;
+  margin-top: 4rem;
 }
 
 .save-close-btn {
@@ -342,6 +343,11 @@ export default {
   display: flex;
   margin-bottom: 1rem;
   padding-left: 0.7rem;
+  outline: none;
+}
+
+.timer-description-text-field:focus {
+  border: 1px solid #58a46c;;
 }
 .timer-button-div {
   display: flex;

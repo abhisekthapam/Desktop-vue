@@ -1,71 +1,62 @@
 <template>
-  <v-card-text class="custom-margin-padding">
-    <v-text-field
-      v-if="activeTab === 'one'"
-      :loading="loading"
-      density="compact"
-      variant="solo"
-      label="Searching Matters"
-      prepend-inner-icon="mdi-magnify"
-      single-line
-      hide-details
-      @click:prepend-inner="onClick"
-      class="text"
-    >
-      <v-container class="plus-icon">
-        <v-row justify="end">
-          <v-btn
-            variant="text"
-            icon="mdi-plus"
-            class="mt-n3"
-            title="Add Client or Matter"
-          >
-          </v-btn>
-        </v-row>
-      </v-container>
-    </v-text-field>
-  </v-card-text>
+  <div class="custom-margin-padding" v-if="activeTab === 'one'">
+    <div class="text-field">
+      <div class="input-wrapper">
+        <img :src="Logo1" alt="Search Logo" class="logo" />
+        <input          
+          type="text"
+          placeholder="Searching Matters"
+          @click="onClick"
+        />
+        <img :src="Logo2" alt="Plus Logo" class="logo" />
+      </div>
+    </div>
+  </div>
 </template>
-  
-  <script>
+
+<script>
+import Search from '../assets/search.png';
+import Plus from '../assets/plus.png';
+
 export default {
   props: {
     activeTab: String,
   },
-  data: () => ({
-    loaded: false,
-    loading: false,
-  }),
-  methods: {
-    onClick() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.loaded = true;
-      }, 2000);
-    },
+  data() {
+    return {
+      Logo1: Search,
+      Logo2: Plus,
+    };
   },
 };
 </script>
-  
-  <style>
-.custom-margin-padding {
-  margin: 0;
-  margin-top: 3rem;
-  padding: 0;
+
+<style scoped>
+input {
+  margin-top: 4rem;
+  width:100%;
+  font-size: 15px;
+  outline: none;
 }
 
-.plus-icon {
-  height: 1rem;
-  opacity: 0.7;
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #58a46c;
 }
 
-.mdi-plus:hover {
-  color: #58a46c;
+.logo {
+  margin-top: 4rem;
+  cursor: pointer;
+  opacity: 0.5;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
-.text {
-  font-size: 10px;
+.logo:hover {
+  opacity: 1;
 }
+
 </style>
-  

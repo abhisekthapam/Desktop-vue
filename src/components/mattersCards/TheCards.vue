@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center flex-column">
-    <div class="mt-4 text-subtitle-2"></div>
+    <div class="text-subtitle-2"></div>
     <v-card width="310px" text="113- Doug's Milton"
       ><div class="custom-flex">
         <div><p>Milton's Milton Factory</p></div>
@@ -280,6 +280,7 @@ export default {
 .custom-flex {
   display: flex;
   justify-content: space-between;
+  padding-bottom: 0.4rem;
 }
 
 p {

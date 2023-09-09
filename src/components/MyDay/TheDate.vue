@@ -168,6 +168,10 @@ export default {
 </script>
 
 <style>
+.calander-div {
+  margin-top: 3rem;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;

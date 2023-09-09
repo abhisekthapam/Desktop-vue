@@ -8,7 +8,7 @@
       <v-tab value="one">My Matters</v-tab>
       <v-tab value="two">My Day</v-tab>
       <v-tab value="three"
-        >Timers<img :src="Logo1" alt="Timer Logo" class="logo" />
+        >Timers<img :src="Logo1" alt="Timer Logo" class="logo timers" />
       </v-tab>
 
       <v-container>
@@ -108,7 +108,9 @@ export default {
   margin-left: 0.2rem;
 }
 
-
+.timers {
+  display: none;
+}
 </style>
 
 
