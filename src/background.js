@@ -27,6 +27,7 @@ async function createWindow() {
     width: 385,
     minWidth: 385,
     height: 630,
+    alwaysOnTop:true,
     resizable: true,
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
